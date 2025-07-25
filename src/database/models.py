@@ -1,6 +1,13 @@
-from typing import List, Optional
+import datetime
+from typing import Optional
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import (
+    String,
+    Date,
+    DECIMAL,
+    Float,
+    Text, UniqueConstraint,
+)
 from sqlalchemy.orm import (
     DeclarativeBase,
     mapped_column,
@@ -30,7 +37,18 @@ class MovieModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
     genre: Mapped[str] = mapped_column(String(46), index=True, nullable=False)
-    price: Mapped[float] = mapped_column(nullable=False)
+    date: Mapped[datetime.datetime] = mapped_column(Date, nullable=False)
+    score: Mapped[float] = mapped_column(Float, nullable=False)
+    overview: Mapped[Optional[str]] = mapped_column(Text)
+    crew: Mapped[str] = mapped_column(Text, nullable=False)
+    orig_title: Mapped[str] = mapped_column(String, nullable=False)
+    budget: Mapped[float] = mapped_column(DECIMAL(10, 2), nullable=False)
+    revenue: Mapped[float] = mapped_column(Float, nullable=False)
+    country: Mapped[str] = mapped_column(String(3), nullable=False)
+
+    __table_args__ =(
+        UniqueConstraint('name', 'date', name='unique_movie_constraint')
+    )
 
     def __repr__(self):
-        return f"<Film #{self.id!r} (title={self.title!r}, genre={self.genre!r}, price={self.price!r})>"
+        return f"<Movie #{self.id!r} (title={self.title!r}, release_date={self.date!r}, score={self.score!r})>"
