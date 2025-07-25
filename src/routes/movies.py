@@ -4,14 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from database import get_db
-from schemas import FilmCreate, FilmRead
+from schemas import MovieCreateSchema, MovieDetailResponseSchema
 from database.models import MovieModel
 
 
 router = APIRouter()
 
 
-@router.get('/movies/{film_id}', response_model=FilmRead)
+@router.get('/movies/{film_id}', response_model=MovieDetailResponseSchema)
 async def get_film(film_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(MovieModel).where(MovieModel.id == film_id))
     film = result.scalar_one_or_none()
@@ -21,8 +21,8 @@ async def get_film(film_id: int, db: AsyncSession = Depends(get_db)):
 
     return film
 
-@router.post('/movies/', response_model=FilmRead)
-async def create_film(film: FilmCreate, db: AsyncSession = Depends(get_db)):
+@router.post('/movies/', response_model=MovieDetailResponseSchema)
+async def create_film(film: MovieCreateSchema, db: AsyncSession = Depends(get_db)):
     new_film = MovieModel(**film.model_dump())
     db.add(new_film)
     await db.commit()
