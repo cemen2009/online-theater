@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 from typing import Optional
 
 from sqlalchemy import (
@@ -37,7 +37,7 @@ class MovieModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
     genre: Mapped[str] = mapped_column(String(46), index=True, nullable=False)
-    date: Mapped[datetime.datetime] = mapped_column(Date, nullable=False)
+    date: Mapped[date] = mapped_column(Date, nullable=False)
     score: Mapped[float] = mapped_column(Float, nullable=False)
     overview: Mapped[Optional[str]] = mapped_column(Text)
     crew: Mapped[str] = mapped_column(Text, nullable=False)
@@ -47,7 +47,7 @@ class MovieModel(Base):
     country: Mapped[str] = mapped_column(String(3), nullable=False)
 
     __table_args__ =(
-        UniqueConstraint('name', 'date', name='unique_movie_constraint')
+        UniqueConstraint('title', 'date', name='unique_movie_constraint'),
     )
 
     def __repr__(self):

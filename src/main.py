@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Header
 
-from routers import users, movies
+from routes import user_router, movie_router
 from database import init_db, close_db
 
 
@@ -28,8 +28,8 @@ app = FastAPI(
 
 api_version_prefix = "/api/v1"
 
-app.include_router(movies.router, prefix=f"{api_version_prefix}/theater", tags=["theater"])
-app.include_router(users.router, prefix=f"{api_version_prefix}/users")
+app.include_router(movie_router, prefix=f"{api_version_prefix}/theater", tags=["theater"])
+app.include_router(user_router, prefix=f"{api_version_prefix}/users")
 
 @app.get("/items/")
 async def read_items(user_agent: Annotated[str | None, Header()] = None):

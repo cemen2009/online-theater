@@ -10,7 +10,7 @@ from database import Base
 
 settings = get_settings()
 
-DATABASE_URL = f"sqlite:///{settings.PATH_TO_DATABASE}"
+DATABASE_URL = f"sqlite+aiosqlite:///{settings.PATH_TO_DATABASE}"
 ECHO_SQL_QUERIES = settings.ECHO_SQL_QUERIES
 
 print(f"Connecting to database at: {DATABASE_URL}")

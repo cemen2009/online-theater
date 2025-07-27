@@ -1,18 +1,24 @@
 import os
 from pathlib import Path
+from typing import ClassVar
+from dotenv import load_dotenv
 
 from pydantic_settings import BaseSettings
 
 
+load_dotenv()   # to load environment variables
+
+
 class Settings(BaseSettings):
-    BASE_DIR = Path(__file__).parent.parent
-    PATH_TO_DB: str = str(BASE_DIR / "database" / "source" / "movies.db")
+    BASE_DIR: ClassVar[Path] = Path(__file__).parent.parent
+    PATH_TO_DATABASE: str = str(BASE_DIR / "database" / "source" / "movies.db")
     PATH_TO_MOVIES_CSV: str = str(BASE_DIR / "database" / "seed_data" / "imdb_movies.csv")
     ECHO_SQL_QUERIES: bool = False
 
 
 class TestingSettings(Settings):
-    PATH_TO_DB: str =":memory:"
+    # PATH_TO_DATABASE: str = str(super().BASE_DIR / "database" / "source" / "movies.db")
+    # PATH_TO_DATABASE: str = ":memory:"
     ECHO_SQL_QUERIES: bool = True
 
 
@@ -29,7 +35,7 @@ def get_settings() -> Settings | TestingSettings:
     :rtype: BaseSettings
     """
     environment = os.getenv("ENVIRONMENT", "developing")
-    if environment == "testings":
+    if environment == "testing":
         return TestingSettings()
 
     return Settings()
