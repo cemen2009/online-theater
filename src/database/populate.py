@@ -54,14 +54,27 @@ class CSVDatabaseSeeder:
         :return: Preprocessed DateFrame containing the movie data.
         :rtype: pd.DataFrame
         """
-        data = pd.read_csv(self._csv_file_path)
+        data = pd.read_csv(
+            self._csv_file_path,
+            usecols=(
+                'names',
+                'date_x',
+                'score',
+                'genre',
+                'overview',
+                'crew',
+                'orig_title',
+                'budget_x',
+                'revenue',
+                'country')
+        )
         data = data.drop_duplicates(subset=['names', 'date_x'], keep='first')
         data['crew'] = data['crew'].fillna('Unknown')
         data['genre'] = data['genre'].fillna('Unknown')
         data['genre'] = data['genre'].str.replace('\u00A0', '', regex=True)
         data['date_x'] = data['date_x'].str.strip()
-        data['date_x'] = pd.to_datetime(data['date_x'], format='%m%d%Y', errors='coerce')
-        data['date_x'] = data['data_x'].dt.date
+        data['date_x'] = pd.to_datetime(data['date_x'], format='%m/%d/%Y', errors='coerce')
+        data['date_x'] = data['date_x'].dt.date
         print("Preprocessing csv file")
 
         return data
@@ -93,7 +106,7 @@ class CSVDatabaseSeeder:
                         overview=row['overview'],
                         crew=row['crew'],
                         orig_title=row['orig_title'],
-                        budget=float(row['budget']),
+                        budget=float(row['budget_x']),
                         revenue=float(row['revenue']),
                         country=row['country']
                     )
@@ -101,7 +114,7 @@ class CSVDatabaseSeeder:
 
             await self._db_session.commit()
         except SQLAlchemyError as e:
-            print(f"An error occured: {e}")
+            print(f"An error occurred: {e}")
             await self._db_session.rollback()
             raise
         except Exception as e:
