@@ -4,8 +4,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from tqdm.asyncio import tqdm
 
-from src.config import get_settings
-from src.database import (
+from config import get_settings
+from database import (
     MovieModel,
     get_db_contextmanager,
     init_db
@@ -114,7 +114,7 @@ async def main() -> None:
 
     await init_db()
 
-    async with get_db_contextmanager as db_session:
+    async with get_db_contextmanager() as db_session:
         seeder = CSVDatabaseSeeder(csv_file_path=settings.PATH_TO_MOVIES_CSV, db_session=db_session)
 
         if not await seeder.is_db_populated():

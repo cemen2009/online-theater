@@ -12,8 +12,8 @@ from fastapi import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from src.schemas import MovieListResponseSchema, MovieDetailResponseSchema
-from src.database import MovieModel, get_db
+from schemas import MovieListResponseSchema, MovieDetailResponseSchema
+from database import MovieModel, get_db
 
 
 router = APIRouter()
